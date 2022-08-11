@@ -1,6 +1,6 @@
-package io.github.zam0k.HolyHealth.domain;
+package io.github.zam0k.HolyHealth.domain.entities;
 
-import io.github.zam0k.HolyHealth.enums.Type;
+import io.github.zam0k.HolyHealth.domain.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 
 @Entity
-@Table
+@Table(name = "health_problem")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

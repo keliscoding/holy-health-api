@@ -8,8 +8,10 @@ spring:
     username: root
     password: root
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQL5Dialect
     properties:
       hibernate:
         show_sql: true
         format_sql: true
+    hibernate:
+      ddl-auto: 'create-drop'
