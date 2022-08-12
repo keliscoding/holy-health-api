@@ -2,11 +2,13 @@ package io.github.zam0k.HolyHealth.rest.controller;
 
 import io.github.zam0k.HolyHealth.domain.entities.Client;
 import io.github.zam0k.HolyHealth.rest.dto.ClientDTO;
+import io.github.zam0k.HolyHealth.rest.dto.RiskierClientDTO;
 import io.github.zam0k.HolyHealth.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -31,6 +33,11 @@ public class ClientController {
         return client;
     }
 
+    @GetMapping("/riskier")
+    public Set<RiskierClientDTO> getTenRiskierClients() {
+        return service.listRiskier();
+    }
+
     @PostMapping
     @ResponseStatus(CREATED)
     public Client save(@RequestBody ClientDTO dto) {
@@ -38,7 +45,7 @@ public class ClientController {
         return client;
     }
 
-    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(path = "/{id}")
     @ResponseStatus(NO_CONTENT)
     public void update(@PathVariable UUID id,
                        @RequestBody ClientDTO client) {
@@ -51,12 +58,4 @@ public class ClientController {
         service.remove(id);
     }
 
-    private ClientDTO convert(Client client) {
-        return ClientDTO.builder()
-                .name(client.getName())
-                .birthdate(client.getBirthdate())
-                .gender(client.getGender())
-                .healthProblems(client.getHealthProblems())
-                .build();
-    }
 }

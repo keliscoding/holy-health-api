@@ -2,8 +2,10 @@ package io.github.zam0k.HolyHealth.service;
 
 import io.github.zam0k.HolyHealth.domain.entities.Client;
 import io.github.zam0k.HolyHealth.rest.dto.ClientDTO;
+import io.github.zam0k.HolyHealth.rest.dto.RiskierClientDTO;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public interface ClientService {
@@ -12,4 +14,5 @@ public interface ClientService {
     List<ClientDTO> listAll();
     void update(ClientDTO client, UUID id);
     void remove(UUID id);
+    Set<RiskierClientDTO> listRiskier();
 }

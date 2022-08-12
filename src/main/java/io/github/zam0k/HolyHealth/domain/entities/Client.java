@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+
 @Entity
 @Table
 @Data
@@ -35,6 +36,8 @@ public class Client {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Setter(AccessLevel.NONE)
     private LocalDateTime updatedAt;
+
+    private Double score;
 
     @ManyToMany
     @JoinTable(name = "client_health_problem",
