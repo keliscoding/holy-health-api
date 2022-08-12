@@ -10,7 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,9 +36,11 @@ public class Client {
     @Setter(AccessLevel.NONE)
     private LocalDateTime updatedAt;
 
-    @OneToMany
-    @Column(name = "health_problems")
-    private List<HealthProblem> healthProblems;
+    @ManyToMany
+    @JoinTable(name = "client_health_problem",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "health_problem_id"))
+    private Set<HealthProblem> healthProblems;
 
     @PrePersist
     private void onCreate() {

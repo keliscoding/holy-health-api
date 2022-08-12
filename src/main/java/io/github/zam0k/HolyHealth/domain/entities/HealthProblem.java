@@ -17,6 +17,7 @@ import java.util.UUID;
 public class HealthProblem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
     private String name;
     @Enumerated(EnumType.STRING)

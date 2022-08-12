@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import io.github.zam0k.HolyHealth.domain.entities.Client;
+import io.github.zam0k.HolyHealth.domain.entities.HealthProblem;
 import io.github.zam0k.HolyHealth.domain.repository.ClientRepository;
 import io.github.zam0k.HolyHealth.domain.repository.HealthProblemRepository;
 import io.github.zam0k.HolyHealth.rest.dto.ClientDTO;
@@ -17,8 +18,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +34,18 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client save(ClientDTO dto) {
         Client client = modelMapper.map(dto, Client.class);
-        // TO-DO: Implements a way to add health problems to clients and retrieve its details in client json
-        // TO-DO: Check why you cannot add the same health problem to different clients
         // TO-DO: Custom errors and implements controller adviser
 
-//        List<HealthProblem> healthProblemsList = dto.getHealthProblems().stream().map(hp -> {
-//            UUID id = hp.getId();
-//            HealthProblem healthProblem = healthRepository.findById(id).orElseThrow(() -> new RuntimeException());
-//        }).collect(Collectors.toList());
-//
-//        client.setHealthProblems(healthProblemsList);
+        List<UUID> ids = dto.getHealthProblems().stream().map(hp -> {
+            return hp.getId();
+        }).collect(Collectors.toList());
+
+        Set<HealthProblem> multipleHealthProblems = healthRepository.getMultipleHealthProblems(ids);
+        if(multipleHealthProblems.size() < ids.size()) throw new RuntimeException();
+        client.setHealthProblems(multipleHealthProblems);
         clientRepository.save(client);
         return client;
+
     }
 
     @Override

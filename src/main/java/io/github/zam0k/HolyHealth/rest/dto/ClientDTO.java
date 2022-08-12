@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -20,5 +20,5 @@ public class ClientDTO {
     private String name;
     private LocalDate birthdate;
     private Gender gender;
-    private List<HealthProblem> healthProblems;
+    private Set<HealthProblem> healthProblems;
 }
