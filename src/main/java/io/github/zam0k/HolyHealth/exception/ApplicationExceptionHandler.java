@@ -33,4 +33,15 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UpdateEntityException.class)
+    public final ResponseEntity<ExceptionResponse> handleUpdateEntityException(UpdateEntityException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }
