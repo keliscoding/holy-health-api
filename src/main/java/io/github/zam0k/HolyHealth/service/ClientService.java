@@ -1,6 +1,5 @@
 package io.github.zam0k.HolyHealth.service;
 
-import com.github.fge.jsonpatch.JsonPatch;
 import io.github.zam0k.HolyHealth.domain.entities.Client;
 import io.github.zam0k.HolyHealth.rest.dto.ClientDTO;
 
@@ -11,6 +10,6 @@ public interface ClientService {
     Client save(ClientDTO client);
     ClientDTO getById(UUID id);
     List<ClientDTO> listAll();
-    void update(JsonPatch patch, UUID id);
+    void update(ClientDTO client, UUID id);
     void remove(UUID id);
 }

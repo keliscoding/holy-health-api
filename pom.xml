@@ -61,17 +61,17 @@
 			<version>3.0.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.github.java-json-tools</groupId>
-			<artifactId>json-patch</artifactId>
-			<version>1.12</version>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.13.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.3</version>
 		</dependency>
 
 	</dependencies>

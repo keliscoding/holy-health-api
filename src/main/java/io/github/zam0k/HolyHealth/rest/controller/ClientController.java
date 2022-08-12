@@ -1,6 +1,5 @@
 package io.github.zam0k.HolyHealth.rest.controller;
 
-import com.github.fge.jsonpatch.JsonPatch;
 import io.github.zam0k.HolyHealth.domain.entities.Client;
 import io.github.zam0k.HolyHealth.rest.dto.ClientDTO;
 import io.github.zam0k.HolyHealth.service.ClientService;
@@ -42,8 +41,8 @@ public class ClientController {
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
     @ResponseStatus(NO_CONTENT)
     public void update(@PathVariable UUID id,
-                       @RequestBody JsonPatch patch) {
-        service.update(patch, id);
+                       @RequestBody ClientDTO client) {
+        service.update(client, id);
     }
 
     @DeleteMapping("/{id}")

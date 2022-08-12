@@ -11,14 +11,22 @@ import io.github.zam0k.HolyHealth.domain.entities.Client;
 import io.github.zam0k.HolyHealth.domain.entities.HealthProblem;
 import io.github.zam0k.HolyHealth.domain.repository.ClientRepository;
 import io.github.zam0k.HolyHealth.domain.repository.HealthProblemRepository;
+import io.github.zam0k.HolyHealth.exception.EntityNotFoundException;
+import io.github.zam0k.HolyHealth.exception.SearchHealthProblemsException;
+import io.github.zam0k.HolyHealth.helper.NullAwareBeanUtilsBean;
 import io.github.zam0k.HolyHealth.rest.dto.ClientDTO;
 import io.github.zam0k.HolyHealth.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.transaction.Transactional;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,22 +34,24 @@ import java.util.stream.Collectors;
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
-
     private final HealthProblemRepository healthRepository;
     private ModelMapper modelMapper = new ModelMapper();
     private ObjectMapper objectMapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    @Autowired
+    private NullAwareBeanUtilsBean beanUtilsBean;
 
     @Override
+    @Transactional
     public Client save(ClientDTO dto) {
         Client client = modelMapper.map(dto, Client.class);
-        // TO-DO: Custom errors and implements controller adviser
+        // TO-DO: Custom errors and implement controller adviser
 
         List<UUID> ids = dto.getHealthProblems().stream().map(hp -> {
             return hp.getId();
         }).collect(Collectors.toList());
 
         Set<HealthProblem> multipleHealthProblems = healthRepository.getMultipleHealthProblems(ids);
-        if(multipleHealthProblems.size() < ids.size()) throw new RuntimeException();
+        if(multipleHealthProblems.size() < ids.size()) throw new SearchHealthProblemsException();
         client.setHealthProblems(multipleHealthProblems);
         clientRepository.save(client);
         return client;
@@ -50,7 +60,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO getById(UUID id) {
-        Client client = clientRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        Client client = clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
         ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
         return clientDTO;
     }
@@ -64,14 +74,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void update(JsonPatch patch, UUID id) {
-        Client client = clientRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    public void update(ClientDTO dto, UUID id) {
+        Client client = clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
 
         try {
-            Client clientPatched = applyPatchToClient(patch, client);
-            clientPatched.setId(client.getId());
-            clientRepository.save(clientPatched);
-        } catch (JsonPatchException | JsonProcessingException e) {
+            beanUtilsBean.copyProperties(client, dto);
+            clientRepository.save(client);
+        } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
 
@@ -79,7 +88,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void remove(UUID id) {
-        Client client = clientRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        Client client = clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
         clientRepository.delete(client);
     }
 
