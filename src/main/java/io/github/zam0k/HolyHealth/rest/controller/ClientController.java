@@ -3,10 +3,12 @@ package io.github.zam0k.HolyHealth.rest.controller;
 import io.github.zam0k.HolyHealth.domain.entities.Client;
 import io.github.zam0k.HolyHealth.rest.dto.ClientDTO;
 import io.github.zam0k.HolyHealth.rest.dto.RiskierClientDTO;
+import io.github.zam0k.HolyHealth.rest.dto.UpdateClientDTO;
 import io.github.zam0k.HolyHealth.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -40,7 +42,7 @@ public class ClientController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Client save(@RequestBody ClientDTO dto) {
+    public Client save(@Valid @RequestBody ClientDTO dto) {
         Client client = service.save(dto);
         return client;
     }
@@ -48,7 +50,8 @@ public class ClientController {
     @PatchMapping(path = "/{id}")
     @ResponseStatus(NO_CONTENT)
     public void update(@PathVariable UUID id,
-                       @RequestBody ClientDTO client) {
+                       @Valid
+                       @RequestBody UpdateClientDTO client) {
         service.update(client, id);
     }
 

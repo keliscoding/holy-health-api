@@ -5,7 +5,9 @@ import io.github.zam0k.HolyHealth.service.HealthProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.*;
+import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/api/health-problems")
@@ -16,7 +18,7 @@ public class HealthProblemController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public HealthProblem save(@RequestBody HealthProblem healthProblem) {
+    public HealthProblem save(@Valid @RequestBody HealthProblem healthProblem) {
         HealthProblem hp = service.save(healthProblem);
         return hp;
     }
